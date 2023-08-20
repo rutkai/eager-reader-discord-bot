@@ -9,7 +9,11 @@ import (
 	"strings"
 )
 
-var blacklist = []string{"youtube.com"}
+var blacklist = []string{
+	"youtube.com",
+	"youtu.be",
+	"9gag.com",
+}
 
 func StartBot() {
 	discord, err := discordgo.New("Bot " + getBotToken())
