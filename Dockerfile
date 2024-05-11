@@ -1,4 +1,4 @@
-FROM golang:1.22-buster as builder
+FROM golang:1.22-bullseye as builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN go mod download
 COPY src/ ./
 RUN go build -v -o eager-reader-discord-bot
 
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ca-certificates && \
