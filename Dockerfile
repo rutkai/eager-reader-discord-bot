@@ -16,4 +16,4 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 COPY --from=builder /app/eager-reader-discord-bot /app/eager-reader-discord-bot
 
-CMD ["/app/eager-reader-discord-bot"]
+ENTRYPOINT ["/app/eager-reader-discord-bot"]

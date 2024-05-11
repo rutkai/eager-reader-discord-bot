@@ -7,16 +7,19 @@ import (
 	"os"
 	"regexp"
 	"slices"
+	"strings"
 )
 
 var allowlist = []string{}
 var blocklist = []string{}
 
 func SetAllowlist(list []string) {
+	log.Debug().Str("Domains", strings.Join(list, ",")).Msg("Setting allowlist")
 	allowlist = list
 }
 
 func SetBlocklist(list []string) {
+	log.Debug().Str("Domains", strings.Join(list, ",")).Msg("Setting blocklist")
 	blocklist = list
 }
 
