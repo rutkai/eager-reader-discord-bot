@@ -14,6 +14,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
+WORKDIR /app
+
 COPY --from=builder /app/eager-reader-discord-bot /app/eager-reader-discord-bot
 
 ENTRYPOINT ["/app/eager-reader-discord-bot"]
