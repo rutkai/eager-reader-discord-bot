@@ -6,13 +6,18 @@ import (
 	"github.com/rs/zerolog/log"
 	"os"
 	"regexp"
-	"strings"
+	"slices"
 )
 
-var blacklist = []string{
-	"youtube.com",
-	"youtu.be",
-	"9gag.com",
+var allowlist = []string{}
+var blocklist = []string{}
+
+func SetAllowlist(list []string) {
+	allowlist = list
+}
+
+func SetBlocklist(list []string) {
+	blocklist = list
 }
 
 func StartBot() {
@@ -57,8 +62,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	log.Debug().Str("Url", url).Msg("URL found in message")
 
-	if isBlacklisted(url) {
-		log.Debug().Str("Url", url).Msg("URL is blacklisted")
+	domain := parseDomain(url)
+	if isBlocklisted(domain) {
+		log.Debug().Str("Url", url).Msg("URL is blocklisted")
+		return
+	}
+	if !isAllowlisted(domain) {
+		log.Debug().Str("Url", url).Msg("URL is not allowlisted")
 		return
 	}
 
@@ -80,11 +90,19 @@ func parseUrl(url string) string {
 	return re.FindString(url)
 }
 
-func isBlacklisted(url string) bool {
-	for _, blacklistedUrl := range blacklist {
-		if strings.Contains(url, blacklistedUrl) {
-			return true
-		}
+func isBlocklisted(domain string) bool {
+	return slices.Contains(blocklist, domain)
+}
+
+func isAllowlisted(domain string) bool {
+	if len(allowlist) == 0 {
+		return true
 	}
-	return false
+
+	return slices.Contains(allowlist, domain)
+}
+
+func parseDomain(url string) string {
+	re := regexp.MustCompile(`https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256})\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`)
+	return re.FindStringSubmatch(url)[2]
 }

@@ -2,7 +2,9 @@ package main
 
 import (
 	"EagerReaderDiscordBot/discord"
+	"encoding/json"
 	"flag"
+	"fmt"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"os"
@@ -12,6 +14,9 @@ import (
 
 func main() {
 	initZerolog()
+
+	discord.SetAllowlist(getAllowlist())
+	discord.SetBlocklist(getBlocklist())
 	discord.StartBot()
 
 	log.Debug().Msg("Debug mode enabled!")
@@ -35,4 +40,27 @@ func initZerolog() {
 	}
 
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+}
+
+func getBlocklist() []string {
+	return getConfigList("blocklist")
+}
+
+func getAllowlist() []string {
+	return getConfigList("allowlist")
+}
+
+func getConfigList(config string) []string {
+	fileContent, err := os.ReadFile(fmt.Sprintf("config/%s.json", config))
+	if err != nil {
+		return []string{}
+	}
+
+	var list []string
+	err = json.Unmarshal(fileContent, &list)
+	if err != nil {
+		return []string{}
+	}
+
+	return list
 }
