@@ -17,15 +17,15 @@ func init() {
 
 func GetSummary(url string, quote string) (string, error) {
 	if quote == "" || !strings.Contains(quote, "%s") {
-		quote = "Give me a short summary of the content located under the URL %s. " +
-			"Your response should be 3-6 bullet points and should be in the same language as the original content. " +
-			"Start the text with stating this is a short summary using the same language as the original content. Do not mention the page URL."
+		quote = "Give me a summary of %s . " +
+			"Your response should be 3-6 bullet points and in the same language as the original content. " +
+			"Start the text with stating, this is a short summary using the same language as the original content. Do not mention the page URL."
 	}
 
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
+			Model: openai.GPT4Turbo,
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
